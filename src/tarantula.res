@@ -68,7 +68,8 @@ let totalFailed = (results: testData) =>
 // == tarantula computation ==
 type tarantulaLine = {
     lineNumber: int,
-    hue: float
+    hue: float,
+    suspiciousness: float,
 }
 
 type tarantulaFile =  {
@@ -90,8 +91,12 @@ let tarantulaForFile = (file: sourceFile, results: testData, tPassed, tFailed) =
     let tarantula_lines: array<tarantulaLine> = 
         file.lines 
         -> map(line => {
-            lineNumber: line.lineNumber,
-            hue: hue(line, results, tPassed, tFailed)
+                let lineHue = hue(line, results, tPassed, tFailed)
+                {
+                lineNumber: line.lineNumber,
+                hue: lineHue,
+                suspiciousness: 1.0 -. lineHue,
+                }
             }
         )
     {fileName: file.fileName, lines: tarantula_lines}
