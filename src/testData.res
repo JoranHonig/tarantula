@@ -45,12 +45,15 @@ let fromMocha = (mochaTestResult) => {
         let passed = Js_dict.get(mochaTestResult, "passed")
         -> unwrap("Can't find passed test cases in mocha result")
         -> Belt.Array.map(testCase => toTestResult(testCase, Some("Success")))
+
         let failed = Js_dict.get(mochaTestResult, "failed") 
         -> unwrap("Can't find failed test cases in mocha result")
-        -> Belt.Array.map(testCase => toTestResult(testCase, Some("Failure")))        
+        -> Belt.Array.map(testCase => toTestResult(testCase, Some("Failure"))) 
+
         let parsedTestResult = Array.concat(list{passed, failed})
         -> Belt.Array.map(testResult => (testResult.test.fullTitle, testResult))
         -> Js_dict.fromArray
+
         Some(parsedTestResult)
     } catch {
         | NotFound(_) => None
@@ -63,6 +66,7 @@ let fromSolCover = (coverageResult) => {
         -> Belt.Array.map(fileName => {
             let solCoverLines = Js_dict.get(coverageResult, fileName) 
                 -> unwrap("Can't Happen")
+
             let sourceLines = Js_dict.keys(solCoverLines)
                 -> Belt.Array.map(sourceLine => {
                     let identifiers = Js_dict.get(solCoverLines, sourceLine) 
@@ -76,12 +80,14 @@ let fromSolCover = (coverageResult) => {
                         lineNumber: Belt.Int.fromString(sourceLine) -> unwrap("Error parsing line number"),
                         tests: identifiers
                     }
-                })          
+                })   
+
             {
                 fileName: fileName,
                 lines: sourceLines
             }
         })
+        
         Some(cov)
     } catch {
         | NotFound(_) => None
