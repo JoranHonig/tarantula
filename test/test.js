@@ -1,7 +1,6 @@
 var assert = require('assert')
 const { stringify } = require('querystring')
-var tarantula = require('../src/Tarantula.bs.js')
-var td = require('../src/TestData.bs.js')
+var t = require('../src/index.bs.js')
 
 var exampleCoverage = {
     "contracts/MetaCoin.sol": {
@@ -184,13 +183,13 @@ describe('Tarantula', function() {
     describe('tarantulaScore()', function() {
         it('should score this input correctly', function() {
             var testData = {
-                testResults: td.fromMocha(exampleTestResult),
-                coverage: td.fromSolCover(exampleCoverage)
+                testResults: t.fromMocha(exampleTestResult),
+                coverage: t.fromSolCover(exampleCoverage)
             }
             // console.log(testData)
 
             // Act
-            score = tarantula.tarantulaScore(testData)
+            score = t.tarantulaScore(testData)
 
             // Assert
             for (var filename in score) {

@@ -10,7 +10,8 @@
   "keywords": [
     "rescript"
   ],
-  "author": "",
+  "main": "src/index.bs.js",
+  "author": "Joran Honig",
   "license": "MIT",
   "devDependencies": {
     "bs-platform": "*",
