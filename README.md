@@ -1,5 +1,5 @@
 # 👾 Tarantula 
-
+![Run Test 🔬](https://github.com/JoranHonig/tarantula/workflows/Run%20Test%20%F0%9F%94%AC/badge.svg)
 Implementation of the tarantula fault localisation algorithm in rescript.
 
 
