@@ -1,7 +1,7 @@
 type testIdentifier = {
     title: string,
     fullTitle: string,
-    file: string
+    file: option<string>
 }
 
 type sourceLine = {
@@ -36,17 +36,17 @@ let fromMocha = (mochaTestResult) => {
                 test : {
                     title:  Js_dict.get(testCase, "title") -> unwrap("Can't find title in test object"),
                     fullTitle: Js_dict.get(testCase, "fullTitle") -> unwrap("Can't find fullTitle in test object"),
-                    file: Js_dict.get(testCase, "file") -> unwrap("Can't find file in test object"),
+                    file: Js_dict.get(testCase, "file"),
                 },
                 result: result
             }
     } 
     try {
-        let passed = Js_dict.get(mochaTestResult, "passed")
+        let passed = Js_dict.get(mochaTestResult, "passes")
         -> unwrap("Can't find passed test cases in mocha result")
         -> Belt.Array.map(testCase => toTestResult(testCase, Some("Success")))
 
-        let failed = Js_dict.get(mochaTestResult, "failed") 
+        let failed = Js_dict.get(mochaTestResult, "failures") 
         -> unwrap("Can't find failed test cases in mocha result")
         -> Belt.Array.map(testCase => toTestResult(testCase, Some("Failure"))) 
 
@@ -56,7 +56,10 @@ let fromMocha = (mochaTestResult) => {
 
         Some(parsedTestResult)
     } catch {
-        | NotFound(_) => None
+        | NotFound(message) => {
+            Js.Exn.raiseError(message)
+            None
+        }
     }
 }
 
@@ -74,7 +77,7 @@ let fromSolCover = (coverageResult) => {
                     -> Belt.Array.map(solCoverIdentifier => {
                         title:  Js_dict.get(solCoverIdentifier, "title") -> unwrap("Can't find title in test object"),
                         fullTitle: Js_dict.get(solCoverIdentifier, "fullTitle") -> unwrap("Can't find fullTitle in test object"),
-                        file: Js_dict.get(solCoverIdentifier, "file") -> unwrap("Can't find file in test object"),
+                        file: Js_dict.get(solCoverIdentifier, "file") -> f => Some(unwrap(f, "Can't find file in test object")),
                     })
                     {
                         lineNumber: Belt.Int.fromString(sourceLine) -> unwrap("Error parsing line number"),
@@ -87,7 +90,7 @@ let fromSolCover = (coverageResult) => {
                 lines: sourceLines
             }
         })
-        
+
         Some(cov)
     } catch {
         | NotFound(_) => None
