@@ -24,10 +24,11 @@ type testData = {
     coverage: array<sourceFile>,
 }
 
-exception NotFound(string)
+exception ParsingError(string)
+
 let unwrap = (anOption, message) => switch anOption {
     | Some(e) => e;
-    | None => raise(NotFound(message))
+    | None => raise(ParsingError(message))
 }
 
 let fromMocha = (mochaTestResult) => {
@@ -56,10 +57,7 @@ let fromMocha = (mochaTestResult) => {
 
         Some(parsedTestResult)
     } catch {
-        | NotFound(message) => {
-            Js.Exn.raiseError(message)
-            None
-        }
+        | ParsingError(message) => Js.Exn.raiseError(message)
     }
 }
 
@@ -77,7 +75,7 @@ let fromSolCover = (coverageResult) => {
                     -> Belt.Array.map(solCoverIdentifier => {
                         title:  Js_dict.get(solCoverIdentifier, "title") -> unwrap("Can't find title in test object"),
                         fullTitle: Js_dict.get(solCoverIdentifier, "fullTitle") -> unwrap("Can't find fullTitle in test object"),
-                        file: Js_dict.get(solCoverIdentifier, "file") -> f => Some(unwrap(f, "Can't find file in test object")),
+                        file: Js_dict.get(solCoverIdentifier, "file"),
                     })
                     {
                         lineNumber: Belt.Int.fromString(sourceLine) -> unwrap("Error parsing line number"),
@@ -93,6 +91,6 @@ let fromSolCover = (coverageResult) => {
 
         Some(cov)
     } catch {
-        | NotFound(_) => None
+        | ParsingError(message) => Js.Exn.raiseError(message)
     }
 }
