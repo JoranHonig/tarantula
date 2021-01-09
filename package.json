@@ -1,6 +1,6 @@
 {
   "name": "tarantula-fl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "build": "bsb -make-world",
     "clean": "bsb -clean-world",
@@ -10,6 +10,10 @@
   "keywords": [
     "rescript", "faultlocalisation"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/JoranHonig/tarantula"
+  },
   "main": "src/index.bs.js",
   "author": "Joran Honig",
   "license": "MIT",
