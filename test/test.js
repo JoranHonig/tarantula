@@ -1,6 +1,6 @@
 var assert = require('assert')
 const { stringify } = require('querystring')
-var tarantula = require('../src/tarantula.bs.js')
+var tarantula = require('../src/Tarantula.bs.js')
 var td = require('../src/TestData.bs.js')
 
 var exampleCoverage = {
@@ -190,7 +190,7 @@ describe('Tarantula', function() {
             // console.log(testData)
 
             // Act
-            score = tarantula.Tarantula.tarantulaScore(testData)
+            score = tarantula.tarantulaScore(testData)
 
             // Assert
             for (var filename in score) {
