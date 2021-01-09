@@ -60,7 +60,10 @@ module Tarantula = {
         let lFailed = float(Test.failed(line, results))
         let tPassed = float(tPassed)
         let tFailed = float(tFailed)
-        (lPassed /. tPassed) /. ((lPassed/.tPassed)+.(lFailed/.tFailed))
+        let passedRatio = tPassed != 0.0 ? (lPassed /. tPassed) : 0.0
+        let failedRatio = tFailed != 0.0 ? (lFailed /. tFailed) : 0.0
+        let sumRatio =  passedRatio +. failedRatio
+        sumRatio != 0.0 ?  passedRatio /. sumRatio : 0.0
     }
 
     let tarantulaForFile = (file: sourceFile, results: testData, tPassed, tFailed) => {
