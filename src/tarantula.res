@@ -2,112 +2,8 @@
 @bs.send external map: (array<'a>, 'a => 'b) => array<'b> = "map"
 
 // Input Type definitions
-module TestDatastructures = {
-    type testIdentifier = {
-        title: string,
-        fullTitle: string,
-        file: string
-    }
-
-    type sourceLine = {
-        lineNumber: int,
-        tests: array<testIdentifier>,
-    }
-
-    type sourceFile = {
-        fileName: string,
-        lines: array<sourceLine>,
-    }
-
-    type testResult = {
-        test: testIdentifier,
-        result: option<string>,
-    }
-
-    type testData = {
-        testResults: Js_dict.t<testResult>,
-        coverage: array<sourceFile>,
-    }
-    exception NotFound
-
-    let fromMocha = (mochaTestResult) => {
-        let unwrap = (anOption) => switch anOption {
-            | Some(e) => e;
-            | None => raise(NotFound)
-        }
-        try {
-            let passed = Js_dict.get(mochaTestResult, "passed")
-            -> unwrap
-            -> map(testCase => {
-                {
-                    test : {
-                        title:  Js_dict.get(testCase, "title") -> unwrap,
-                        fullTitle: Js_dict.get(testCase, "fullTitle") -> unwrap,
-                        file: Js_dict.get(testCase, "file") -> unwrap,
-                    },
-                    result: Some("Success")
-                }
-            })
-            let failed = Js_dict.get(mochaTestResult, "failed") 
-            -> unwrap
-            -> map(testCase => {
-                {
-                    test : {
-                        title:  Js_dict.get(testCase, "title") -> unwrap,
-                        fullTitle: Js_dict.get(testCase, "fullTitle") -> unwrap,
-                        file: Js_dict.get(testCase, "file") -> unwrap,
-                    },
-                    result: Some("Failure")
-                }
-            })            
-            let parsedTestResult = Array.concat(list{passed, failed})
-            -> map(testResult => (testResult.test.fullTitle, testResult))
-            -> Js_dict.fromArray
-            Some(parsedTestResult)
-        } catch {
-            | NotFound => None
-        }
-    }
-
-    let fromSolCover = (coverageResult) => {
-        let unwrap = (anOption) => switch anOption {
-            | Some(e) => e
-            | None => raise(NotFound)
-        }
-        try {
-            let cov = Js_dict.keys(coverageResult)
-            -> map(fileName => {
-                let solCoverLines = Js_dict.get(coverageResult, fileName) 
-                    -> unwrap
-                let sourceLines = Js_dict.keys(solCoverLines)
-                    -> map(sourceLine => {
-                        let identifiers = Js_dict.get(solCoverLines, sourceLine) 
-                        -> unwrap
-                        -> map(solCoverIdentifier => {
-                            title: Js_dict.get(solCoverIdentifier, "title") -> unwrap,
-                            fullTitle:Js_dict.get(solCoverIdentifier, "fullTitle") -> unwrap,
-                            file:  Js_dict.get(solCoverIdentifier, "file") -> unwrap
-                        })
-                        {
-                            lineNumber: Belt.Int.fromString(sourceLine) -> unwrap,
-                            tests: identifiers
-                        }
-                    })
-                    
-                {
-                    fileName: fileName,
-                    lines: sourceLines
-                }
-            })
-            Some(cov)
-        } catch {
-            | NotFound => None
-        }
-    }
-}
-
 module Test = {
-    include TestDatastructures
+    include TestData
 
     let passed = (statement: sourceLine, results: testData): int =>  {
         let sucesses = statement.tests 
@@ -145,7 +41,7 @@ module Test = {
 }
 
 module Tarantula = {
-    include TestDatastructures
+    include TestData
 
     // == tarantula computation ==
     type tarantulaLine = {
