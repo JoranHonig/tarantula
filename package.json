@@ -1,5 +1,5 @@
 {
-  "name": "tarantula",
+  "name": "tarantula-fl",
   "version": "0.0.1",
   "scripts": {
     "build": "bsb -make-world",
@@ -8,7 +8,7 @@
     "test": "mocha"
   },
   "keywords": [
-    "rescript"
+    "rescript", "faultlocalisation"
   ],
   "main": "src/index.bs.js",
   "author": "Joran Honig",

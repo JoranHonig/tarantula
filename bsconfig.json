@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/rescript-lang/rescript-compiler/master/docs/docson/build-schema.json",
-  "name": "tarantula",
+  "name": "tarantula-fl",
   "version": "0.0.1",
   "sources": {
     "dir" : "src",
