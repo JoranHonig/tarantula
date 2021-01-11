@@ -8,7 +8,7 @@ Implementation of the tarantula fault localisation algorithm in rescript.
 ## ⬇ Installation
 
 ```sh
-npm install
+npm install tarantula-fl
 ```
 
 ## Example usage
