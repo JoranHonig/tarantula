@@ -1,6 +1,6 @@
 type testIdentifier = {
     title: string,
-    fullTitle: string,
+    fullTitle: option<string>,
     file: option<string>
 }
 
@@ -52,7 +52,7 @@ let fromMocha = (mochaTestResult) => {
             {
                 test : {
                     title:  Js_dict.get(testCase, "title") -> unwrap("Can't find title in test object"),
-                    fullTitle: Js_dict.get(testCase, "fullTitle") -> unwrap("Can't find fullTitle in test object"),
+                    fullTitle: Js_dict.get(testCase, "fullTitle"),
                     file: Js_dict.get(testCase, "file"),
                 },
                 result: result
@@ -90,7 +90,7 @@ let fromSolCover = (coverageResult) => {
                     -> unwrap("Can't Happen")
                     -> Belt.Array.map(solCoverIdentifier => {
                         title:  Js_dict.get(solCoverIdentifier, "title") -> unwrap("Can't find title in test object"),
-                        fullTitle: Js_dict.get(solCoverIdentifier, "fullTitle") -> unwrap("Can't find fullTitle in test object"),
+                        fullTitle: Js_dict.get(solCoverIdentifier, "fullTitle"),
                         file: Js_dict.get(solCoverIdentifier, "file"),
                     })
                     {
