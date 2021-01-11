@@ -8,7 +8,7 @@ module Test = {
     let passed = (statement: sourceLine, results: testData): int =>  {
         let sucesses = statement.tests 
             -> map(t => 
-                switch Js.Dict.get(results.testResults, t.fullTitle) {
+                switch Belt.Map.get(results.testResults, t) {
                     | Some({result: Some("Success")}) => 1
                     | _ => 0
                 }
@@ -19,7 +19,7 @@ module Test = {
     let failed = (statement: sourceLine, results: testData): int =>  {
         let failures = statement.tests
             -> map(t => 
-                switch Js.Dict.get(results.testResults, t.fullTitle) {
+                switch Belt.Map.get(results.testResults, t) {
                     | Some({result: Some("Failure")}) => 1
                     | _ => 0
                 }
@@ -28,13 +28,13 @@ module Test = {
     }
 
     let totalPassed = (results: testData) => 
-        Js.Dict.values(results.testResults) 
+        Belt.Map.valuesToArray(results.testResults) 
         -> filter(test => test.result == Some("Success"))
         -> Array.length
 
 
     let totalFailed = (results: testData) =>
-        Js.Dict.values(results.testResults)
+        Belt.Map.valuesToArray(results.testResults)
         -> filter(test => test.result == Some("Failure"))
         -> Array.length
 

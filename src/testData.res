@@ -19,8 +19,24 @@ type testResult = {
     result: option<string>,
 }
 
+
+module TestCmp = Belt.Id.MakeComparable({
+    let matchFromEnd = (a, b) => switch (a, b) {
+            | (Some(one), Some(other)) => Js.String.endsWith(one, other) || Js.String.endsWith(other, one)
+            | (None, None) => true
+            | _ => false
+        }
+
+
+  type t = testIdentifier
+  let cmp = (a, b) => switch (Pervasives.compare(a.title, b.title), matchFromEnd(a.file, b.file)) {
+          | (0, true) => 0
+          | _ => 1
+      }
+})
+
 type testData = {
-    testResults: Js_dict.t<testResult>,
+    testResults: Belt.Map.t<testIdentifier, testResult, TestCmp.identity>,
     coverage: array<sourceFile>,
 }
 
@@ -52,8 +68,8 @@ let fromMocha = (mochaTestResult) => {
         -> Belt.Array.map(testCase => toTestResult(testCase, Some("Failure"))) 
 
         let parsedTestResult = Array.concat(list{passed, failed})
-        -> Belt.Array.map(testResult => (testResult.test.fullTitle, testResult))
-        -> Js_dict.fromArray
+        -> Belt.Array.map(testResult => (testResult.test, testResult))
+        -> Belt.Map.fromArray(~id=module(TestCmp))
 
         Some(parsedTestResult)
     } catch {
