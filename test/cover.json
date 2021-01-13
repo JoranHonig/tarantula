@@ -1,0 +1,79 @@
+{
+    "contracts/MetaCoin.sol": {
+     "17": [
+      {
+       "title": "should put 10000 MetaCoin in the first account",
+       "fullTitle": "Contract: MetaCoin should put 10000 MetaCoin in the first account",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "21": [
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "22": [
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "23": [
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "24": [
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "25": [
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "29": [
+      {
+       "title": "should call a function that depends on a linked library",
+       "fullTitle": "Contract: MetaCoin should call a function that depends on a linked library",
+       "file": "test/metacoin.js"
+      }
+     ],
+     "33": [
+      {
+       "title": "should put 10000 MetaCoin in the first account",
+       "fullTitle": "Contract: MetaCoin should put 10000 MetaCoin in the first account",
+       "file": "test/metacoin.js"
+      },
+      {
+       "title": "should call a function that depends on a linked library",
+       "fullTitle": "Contract: MetaCoin should call a function that depends on a linked library",
+       "file": "test/metacoin.js"
+      },
+      {
+       "title": "should send coin correctly",
+       "fullTitle": "Contract: MetaCoin should send coin correctly",
+       "file": "test/metacoin.js"
+      }
+     ]
+    },
+    "contracts/ConvertLib.sol": {
+     "7": [
+      {
+       "title": "should call a function that depends on a linked library",
+       "fullTitle": "Contract: MetaCoin should call a function that depends on a linked library",
+       "file": "test/metacoin.js"
+      }
+     ]
+    }
+   }
