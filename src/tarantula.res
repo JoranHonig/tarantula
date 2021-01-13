@@ -59,10 +59,13 @@ let hue = (line: sourceLine, results: testData, tPassed, tFailed) => {
     let lFailed = float(Test.failed(line, results))
     let tPassed = float(tPassed)
     let tFailed = float(tFailed)
-    let passedRatio = tPassed != 0.0 ? (lPassed /. tPassed) : 0.0
+    // If there are no passed tests, then 100% of the passed tests covered this statement
+    let passedRatio = tPassed != 0.0 ? (lPassed /. tPassed) : 1.0
+    // If there are no failed tests then no line is suspect, so the equation becomes passed / (passed + 0) = 1
     let failedRatio = tFailed != 0.0 ? (lFailed /. tFailed) : 0.0
     let sumRatio =  passedRatio +. failedRatio
-    sumRatio != 0.0 ?  passedRatio /. sumRatio : 0.0
+    // If there are no tests, then the hue is 1
+    sumRatio != 0.0 ?  passedRatio /. sumRatio : 1.0
 }
 
 let tarantulaForFile = (file: sourceFile, results: testData, tPassed, tFailed) => {
