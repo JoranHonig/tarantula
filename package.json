@@ -8,17 +8,18 @@
     "test": "mocha"
   },
   "keywords": [
-    "rescript", "faultlocalisation"
+    "rescript",
+    "faultlocalisation"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/JoranHonig/tarantula"
+    "type": "git",
+    "url": "https://github.com/JoranHonig/tarantula"
   },
   "main": "src/index.bs.js",
   "author": "Joran Honig",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "*",
+    "bs-platform": "^8.4.2",
     "mocha": "^8.2.1"
   }
 }
