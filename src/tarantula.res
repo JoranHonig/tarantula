@@ -91,28 +91,45 @@ let tarantulaScore = (results) => {
     -> map(file => tarantulaForFile(file, results, tPassed, tFailed))
 }
 
-let rec flattenLines = (tFiles: option<list<tarantulaFile>>) =>
-    switch tFiles {
-        | None => list{}
-        | Some(list{}) => list{}
-        | Some(files) => {
-            // Edge case is covered above
-            let Some(file) = Belt.List.head(files)
-            let tail = Belt.List.tail(files)
-            Belt.List.concat(
-                file.lines
-                -> map(line => (file.fileName, line))
-                -> Belt.List.fromArray,
-                flattenLines(tail)
-            )
+
+let tarantulaRanking = (tarantulaFiles: array<tarantulaFile>) => {
+    let rec flattenLines = (tFiles: option<list<tarantulaFile>>) =>
+        switch tFiles {
+            | None => list{}
+            | Some(list{}) => list{}
+            | Some(files) => {
+                // Edge case is covered above
+                let Some(file) = Belt.List.head(files)
+                let tail = Belt.List.tail(files)
+                Belt.List.concat(
+                    file.lines
+                    -> map(line => (file.fileName, line))
+                    -> Belt.List.fromArray,
+                    flattenLines(tail)
+                )
         }
     }
-
-
-let rankSuspects = (tFiles: array<tarantulaFile>) => {
-    let cmp = (a, b) => if a == b { 0 } else if a > b { 1 } else { -1 }
-    let allLines = flattenLines(Some(Belt.List.fromArray(tFiles))) 
-    Belt.List.sort(
-        allLines, 
-        ((_, line_a), (_, line_b)) => cmp(line_b.suspiciousness, line_a.suspiciousness))
+    let orderSuspects = (tFiles: array<tarantulaFile>) => {
+        let cmp = (a, b) => if a == b { 0 } else if a > b { 1 } else { -1 }
+        let allLines = flattenLines(Some(Belt.List.fromArray(tFiles))) 
+        Belt.List.sort(
+            allLines, 
+            ((_, line_a), (_, line_b)) => cmp(line_b.suspiciousness, line_a.suspiciousness))
+    }
+    let rec flattenAndRank = (~nSeen=1, ~rRank=1, ~rSuspiciousness=0.0, ordered) => {
+        switch ordered {
+            | None => list{}
+            | Some(orderedList) => {
+                switch Belt.List.head(orderedList) {
+                    | None => list{}
+                    | Some((fileName, line)) => {
+                        let rank = line.suspiciousness == rSuspiciousness ? rRank : nSeen;
+                        list{(rank, fileName, line)}
+                        -> Belt.List.concat(flattenAndRank(Belt.List.tail(orderedList), ~nSeen = nSeen+1, ~rRank=rank, ~rSuspiciousness=line.suspiciousness))
+                    } 
+                }
+            }
+        }
+    }
+    Some(orderSuspects(tarantulaFiles)) -> flattenAndRank -> Belt.List.toArray
 }

@@ -13,7 +13,7 @@ npm install tarantula-fl
 
 ## Example usage
 ```javascript
-var tarantula = require('tarantula')
+var tarantula = require('tarantula-fl')
 
 var testData = {
     testResults: tarantula.TestData.fromMocha(exampleTestResult),
@@ -22,6 +22,8 @@ var testData = {
 
 score = tarantula.Tarantula.tarantulaScore(testData)
 ```
+
+
 
 ## 🤖 Developers
 
