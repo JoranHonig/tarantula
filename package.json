@@ -1,11 +1,12 @@
 {
   "name": "tarantula-fl",
-  "version": "0.0.10",
+  "version": "0.0.0-development",
   "scripts": {
     "build": "bsb -make-world",
     "clean": "bsb -clean-world",
     "start": "bsb -make-world -w",
-    "test": "mocha"
+    "test": "mocha",
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "rescript",
@@ -19,7 +20,8 @@
   "author": "Joran Honig",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^8.2.1"
+    "mocha": "^8.2.1",
+    "semantic-release": "^17.3.6"
   },
   "dependencies": {
     "bs-platform": "^8.4.2"
