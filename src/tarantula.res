@@ -124,12 +124,37 @@ let tarantulaRanking = (tarantulaFiles: array<tarantulaFile>) => {
                     | None => list{}
                     | Some((fileName, line)) => {
                         let rank = line.suspiciousness == rSuspiciousness ? rRank : nSeen;
-                        list{(rank, fileName, line)}
+                        list{(rank, fileName, line.lineNumber, line.lineNumber)}
                         -> Belt.List.concat(flattenAndRank(Belt.List.tail(orderedList), ~nSeen = nSeen+1, ~rRank=rank, ~rSuspiciousness=line.suspiciousness))
                     } 
                 }
             }
         }
     }
-    Some(orderSuspects(tarantulaFiles)) -> flattenAndRank -> Belt.List.toArray
+    let rec meld = (rankedList: Belt.List.t<(int, string, int, int)>) => {
+        if  Belt.List.length(rankedList) < 2 {
+            rankedList
+        }  else{
+            let Some((firstRank, firstFile, firstStart, firstEnd)) = Belt.List.get(rankedList, 0)
+            let Some((secondRank, secondFile, secondStart, secondEnd)) = Belt.List.get(rankedList, 1)
+            if (firstRank == secondRank && firstFile == secondFile && firstEnd == secondStart - 1) {
+                let Some(_, remainder) = rankedList->Belt.List.splitAt(2)
+                list{(firstRank, firstFile, firstStart, secondEnd)}
+                -> Belt.List.concat(remainder)
+                -> meld
+            } else {
+                // Must be some because length > 2
+                let Some(first) = Belt.List.head(rankedList)
+                let Some(remainder) = Belt.List.tail(rankedList)
+                Belt.List.concat(list{first}, remainder -> meld)
+            }
+        }
+        
+    }
+    orderSuspects(tarantulaFiles)
+    -> Belt.List.keep(((_, line)) => line.suspiciousness > 0.0)
+    -> x => Some(x)
+    -> flattenAndRank 
+    -> meld
+    -> Belt.List.toArray
 }
